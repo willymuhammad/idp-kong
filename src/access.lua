@@ -72,8 +72,6 @@ function _M.run(conf)
         _M.error_response("Unauthenticated.", ngx.HTTP_UNAUTHORIZED)
     end
     -- replace Bearer prefix
-    access_token = pl_stringx.replace(access_token, "Bearer ", "", 1)
-
     local res = _M.introspect_access_token(access_token)
     if not res then
         _M.error_response("Authorization server error.", ngx.HTTP_INTERNAL_SERVER_ERROR)
