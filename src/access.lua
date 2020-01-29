@@ -16,7 +16,7 @@ function _M.introspect_access_token_req(access_token)
     local res, err = httpc:request_uri(_M.conf.endpoint, {
         method = "POST",
         ssl_verify = false,
-        headers = { ["Authorizaion"] = access_token, }
+        headers = { ["Authorization"] = access_token, }
     })
 
     if not res then
