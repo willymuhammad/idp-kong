@@ -80,12 +80,6 @@ function _M.run(conf)
         _M.error_response("The resource owner or authorization server denied the request.", ngx.HTTP_UNAUTHORIZED)
     end
     local data = cjson.decode(res.body)
-    if data["active"] ~= true then
-        _M.error_response("The resource owner or authorization server denied the request.", ngx.HTTP_UNAUTHORIZED)
-    end
-    if not _M.is_scope_authorized(data["scope"]) then
-        _M.error_response("Forbidden", ngx.HTTP_FORBIDDEN)
-    end
 
     ngx.req.set_header("X-Userinfo", data)
     -- clear token header from req
