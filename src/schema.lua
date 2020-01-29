@@ -3,28 +3,16 @@ local typedefs = require "kong.db.schema.typedefs"
 return {
     name = "spada-kong",
     fields = {
-        { 
-            endpoint = {
-                type = "string",
-                required = true 
-            }
-        },
-        { 
-            bearer = { 
-                type = "string" ,
-                required = true,
-                default = "Authorization"
-            }
-        },
         {
-            token_cache_time = {
-                type = "number"
-            }
+            config = {
+                type = "record",
+                fields = {
+                    { endpoint = typedefs.url{required = true}, },
+                    { bearer = {type = "string", required = true}, },
+                    { scope = {type = "string"}, },
+                    { token_cache_time = {type = "integer", default = 6000}, },
+                },
+            },
         },
-        {
-            scope = { 
-                type = "string", 
-            }
-        }
-    }
+    },
 }
