@@ -1,5 +1,5 @@
 package = "spada-kong"
-version = "1.0-0"
+version = "1.1-0"
 
 source = {
         url = "git://github.com/willymuhammad/spada-kong"
@@ -19,7 +19,7 @@ build = {
   type = "builtin",
   modules = {
     ["kong.plugins.spada-kong.handler"] = "src/handler.lua",
-    ["kong.plugins.spada-kong.schema"] = "src/schemas.lua",
+    ["kong.plugins.spada-kong.schema"] = "src/schema.lua",
     ["kong.plugins.spada-kong.access"] = "src/access.lua",
   }
 }

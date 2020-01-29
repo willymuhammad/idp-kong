@@ -24,7 +24,6 @@ return {
         {
             scope = { 
                 type = "string", 
-                default = "" 
             }
         }
     }
