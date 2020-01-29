@@ -79,9 +79,9 @@ function _M.run(conf)
     if res.status ~= 200 then
         _M.error_response("The resource owner or authorization server denied the request.", ngx.HTTP_UNAUTHORIZED)
     end
-    local data = cjson.decode(res.body)
+    -- local data = cjson.decode(res.body)
 
-    ngx.req.set_header("X-Userinfo", data)
+    ngx.req.set_header("X-Userinfo", res.body)
     -- clear token header from req
     ngx.req.clear_header(_M.conf.bearer)
 end
