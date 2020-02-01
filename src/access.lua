@@ -81,9 +81,8 @@ function _M.run(conf)
     end
     -- local data = cjson.decode(res.body)
 
-    ngx.req.set_header("X-Userinfo", res.body)
-    -- clear token header from req
-    ngx.req.clear_header(_M.conf.bearer)
+    ngx.req.set_header("x-userinfo", res.body)
+
 end
 
 return _M
