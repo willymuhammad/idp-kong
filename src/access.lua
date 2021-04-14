@@ -77,7 +77,7 @@ function _M.run(conf)
         _M.error_response("Authorization server error.", ngx.HTTP_INTERNAL_SERVER_ERROR)
     end
     if res.status ~= 200 then
-        _M.error_response("The resource owner or authorization server denied the request.", ngx.HTTP_UNAUTHORIZED)
+        _M.error_response("The resource owner or authorization server denied the request.", res.status)
     end
     -- local data = cjson.decode(res.body)
 
