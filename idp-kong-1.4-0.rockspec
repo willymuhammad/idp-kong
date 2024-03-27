@@ -1,8 +1,8 @@
-package = "spada-kong"
+package = "idp-kong"
 version = "1.4-0"
 
 source = {
-        url = "git://github.com/willymuhammad/spada-kong"
+        url = "git://github.com/willymuhammad/idp-kong"
 }
 
 description = {
@@ -18,8 +18,8 @@ dependencies = {
 build = {
   type = "builtin",
   modules = {
-    ["kong.plugins.spada-kong.handler"] = "src/handler.lua",
-    ["kong.plugins.spada-kong.schema"] = "src/schema.lua",
-    ["kong.plugins.spada-kong.access"] = "src/access.lua",
+    ["kong.plugins.idp-kong.handler"] = "src/handler.lua",
+    ["kong.plugins.idp-kong.schema"] = "src/schema.lua",
+    ["kong.plugins.idp-kong.access"] = "src/access.lua",
   }
 }
