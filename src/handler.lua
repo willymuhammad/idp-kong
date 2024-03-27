@@ -1,7 +1,8 @@
-local BasePlugin = require "kong.plugins.base_plugin"
 local access = require "kong.plugins.idp-kong.access"
-
-local TokenHandler = BasePlugin:extend()
+local TokenHandler = {
+    VERSION  = "1.0.0",
+    PRIORITY = 10,
+}
 
 function TokenHandler:new()
     TokenHandler.super.new(self, "idp-kong")
