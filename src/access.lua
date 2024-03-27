@@ -82,12 +82,12 @@ function _M.run(conf)
     -- local data = cjson.decode(res.body)
     -- local token = jwt:load_jwt(access_token)
 
-    ngx.req.set_header("idp_clientid", _M.conf.client_id)
-    ngx.req.set_header("idp_sub", res.body["sub"])
-    ngx.req.set_header("idp_token", access_token)
-    ngx.req.set_header("idp_exp", res.body)
-    ngx.req.set_header("idp_role", res.body["role"])
-    ngx.req.set_header("idp_org", res.body["org"])
+    -- ngx.req.set_header("idp_clientid", _M.conf.client_id)
+    -- ngx.req.set_header("idp_sub", res.body["sub"])
+    -- ngx.req.set_header("idp_token", access_token)
+    -- ngx.req.set_header("idp_exp", res.body)
+    -- ngx.req.set_header("idp_role", res.body["role"])
+    -- ngx.req.set_header("idp_org", res.body["org"])
 
 end
 
