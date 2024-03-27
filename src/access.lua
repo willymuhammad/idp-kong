@@ -2,7 +2,6 @@ local _M = { conf = {} }
 local http = require "resty.http"
 local pl_stringx = require "pl.stringx"
 local cjson = require "cjson.safe"
-local jwt = require "resty.jwt"
 
 function _M.error_response(message, status)
     local jsonStr = '{"data":[],"error":{"code":' .. status .. ',"message":"' .. message .. '"}}'
@@ -81,14 +80,14 @@ function _M.run(conf)
         _M.error_response("The resource owner or authorization server denied the request.", res.status)
     end
     -- local data = cjson.decode(res.body)
-    local token = jwt:load_jwt(access_token)
+    -- local token = jwt:load_jwt(access_token)
 
     ngx.req.set_header("idp_clientid", _M.conf.client_id)
-    ngx.req.set_header("idp_sub", token["sub"])
+    ngx.req.set_header("idp_sub", res.body)
     ngx.req.set_header("idp_token", access_token)
-    ngx.req.set_header("idp_exp", token["exp"])
-    ngx.req.set_header("idp_role", token["role"])
-    ngx.req.set_header("idp_org", token["org"])
+    ngx.req.set_header("idp_exp", res.body)
+    ngx.req.set_header("idp_role", res.body)
+    ngx.req.set_header("idp_org", res.body)
 
 end
 
