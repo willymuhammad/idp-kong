@@ -10,6 +10,7 @@ return {
                     { introspect_endpoint = typedefs.url{ required = true }},
                     { client_id = { type = "string", required = true }},
                     { bearer_type = { type = "string", required = true }},
+                    { scope = { type = "string" }},
                     { token_cache_time = { type = "integer", default = 6000 }}
                 }
             }

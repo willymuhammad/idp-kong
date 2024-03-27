@@ -1,6 +1,6 @@
 local access = require "kong.plugins.idp-kong.access"
 local TokenHandler = {
-    VERSION  = "1.0.0",
+    VERSION  = "3.6.1",
     PRIORITY = 10,
 }
 

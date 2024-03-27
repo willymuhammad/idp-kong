@@ -13,7 +13,7 @@ end
 
 function _M.introspect_access_token_req(access_token)
     local httpc = http:new()
-    local res, err = httpc:request_uri(_M.conf.endpoint, {
+    local res, err = httpc:request_uri(_M.conf.introspect_endpoint, {
         method = "POST",
         ssl_verify = false,
         headers = { ["Authorization"] = access_token, }
@@ -67,7 +67,7 @@ end
  -- TODO: plugin config that will allow not authorized queries
 function _M.run(conf)
     _M.conf = conf
-    local access_token = ngx.req.get_headers()[_M.conf.bearer]
+    local access_token = ngx.req.get_headers()[_M.conf.bearer_type]
     if not access_token then
         _M.error_response("Unauthenticated.", ngx.HTTP_UNAUTHORIZED)
     end
@@ -83,11 +83,11 @@ function _M.run(conf)
     -- local token = jwt:load_jwt(access_token)
 
     ngx.req.set_header("idp_clientid", _M.conf.client_id)
-    ngx.req.set_header("idp_sub", res.body)
+    ngx.req.set_header("idp_sub", res.body["sub"])
     ngx.req.set_header("idp_token", access_token)
     ngx.req.set_header("idp_exp", res.body)
-    ngx.req.set_header("idp_role", res.body)
-    ngx.req.set_header("idp_org", res.body)
+    ngx.req.set_header("idp_role", res.body["role"])
+    ngx.req.set_header("idp_org", res.body["org"])
 
 end
 
