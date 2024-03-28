@@ -1,16 +1,15 @@
 local access = require "kong.plugins.idp-kong.access"
-local TokenHandler = {
+local IDPKongHandler = {
     VERSION  = "3.6.1",
-    PRIORITY = 10,
+    PRIORITY = 1000,
 }
 
-function TokenHandler:new()
-    TokenHandler.super.new(self, "idp-kong")
+function IDPKongHandler:new()
+    IDPKongHandler.super.new(self, "idp-kong")
 end
 
-function TokenHandler:access(conf)
-    TokenHandler.super.access(self)
+function IDPKongHandler:access(conf)
     access.run(conf)
 end
 
-return TokenHandler
+return IDPKongHandler

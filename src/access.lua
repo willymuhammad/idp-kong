@@ -2,6 +2,22 @@ local _M = { conf = {} }
 local http = require "resty.http"
 local pl_stringx = require "pl.stringx"
 local cjson = require "cjson.safe"
+local jwt_parser = require "kong.plugins.jwt.jwt_parser"
+
+local function decode_jwt(encoded_jwt)
+    local jwt, err = jwt_parser:new(encoded_jwt)
+    if not jwt then
+        return nil, err
+    end
+
+    local claims = jwt.claims
+
+    return claims
+end
+
+local function replace_string(input, pattern, replacement)
+    return input:gsub(pattern, replacement)
+end
 
 function _M.error_response(message, status)
     local jsonStr = '{"data":[],"error":{"code":' .. status .. ',"message":"' .. message .. '"}}'
@@ -36,8 +52,7 @@ function _M.introspect_access_token(access_token)
         if err then
             _M.error_response("Unexpected error: " .. err, ngx.HTTP_INTERNAL_SERVER_ERROR)
         end
-        -- not 200 response status isn't valid for normal caching
-        -- TODO:optimisation
+
         if res.status ~= 200 then
             kong.cache:invalidate(cache_id)
         end
@@ -64,14 +79,13 @@ function _M.is_scope_authorized(scope)
     return false
 end
 
- -- TODO: plugin config that will allow not authorized queries
 function _M.run(conf)
     _M.conf = conf
     local access_token = ngx.req.get_headers()[_M.conf.bearer_type]
     if not access_token then
         _M.error_response("Unauthenticated.", ngx.HTTP_UNAUTHORIZED)
     end
-    -- replace Bearer prefix
+
     local res = _M.introspect_access_token(access_token)
     if not res then
         _M.error_response("Authorization server error.", ngx.HTTP_INTERNAL_SERVER_ERROR)
@@ -79,15 +93,19 @@ function _M.run(conf)
     if res.status ~= 200 then
         _M.error_response("The resource owner or authorization server denied the request.", res.status)
     end
-    -- local data = cjson.decode(res.body)
-    -- local token = jwt:load_jwt(access_token)
 
-    -- ngx.req.set_header("idp_clientid", _M.conf.client_id)
-    -- ngx.req.set_header("idp_sub", res.body["sub"])
-    -- ngx.req.set_header("idp_token", access_token)
-    -- ngx.req.set_header("idp_exp", res.body)
-    -- ngx.req.set_header("idp_role", res.body["role"])
-    -- ngx.req.set_header("idp_org", res.body["org"])
+    local cleanToken = replace_string(access_token, "Bearer ", "")
+    local claims, err = decode_jwt(cleanToken)
+    if not claims then
+        return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
+    end
+
+    ngx.req.set_header("idp_clientid", _M.conf.client_id)
+    ngx.req.set_header("idp_sub", claims["sub"])
+    ngx.req.set_header("idp_token", access_token)
+    ngx.req.set_header("idp_exp", claims["exp"])
+    ngx.req.set_header("idp_role", claims["role"])
+    ngx.req.set_header("idp_org", claims["org"])
 
 end
 
